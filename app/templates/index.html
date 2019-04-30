@@ -2,5 +2,31 @@
 
 
 {% block app_content %}
-  
+  <div class="container">
+    <header>
+        <div class="row">
+            <div class="col-md-12">
+              <h1>Twitter</h1>
+              <img class="banner" src="http://placehold.it/800X150" alt="Banner">
+            </div> <!-- ends col 12 -->
+        </div> <!-- ends row -->
+    </header>
+
+    <!-- main area shows products cards -->
+    <main>
+      <div class="row">
+        {% for p in products %}
+          <div class="col-md-4">
+            <div class="card">
+              <img src="{{ p['pic'] }}" alt="Image" class="card-img">
+              <div class="card-title">{{ p["title"] }}</div>
+              <div class="card-subtitle">{{ p["price"] }}</div>
+              <div class="card-text"><p>{{ p["desc"] }}</p></div>
+              <button onClick="console.log('{{ p['title'] }} added to cart')" class="btn btn-primary">Add to Card</button>
+            </div> <!-- ends card -->
+          </div> <!-- ends col 4 -->
+        {% endfor %}
+      </div> <!-- ends rowHodor -->
+    </main>
+  </div> <!-- ends container -->
 {% endblock %}
