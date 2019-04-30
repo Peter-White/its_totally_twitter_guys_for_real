@@ -22,3 +22,9 @@ class RegisterForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired()])
     password2 = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField("Register")
+
+class ContactForm(FlaskForm):
+    name = StringField("Name", validators=[DataRequired()])
+    email = StringField('E-Mail', validators=[DataRequired(), Email()])
+    message = TextAreaField("Message", validators=[DataRequired()])
+    submit = SubmitField("Submit")

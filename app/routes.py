@@ -1,6 +1,7 @@
 from app import app
 from flask import render_template, url_for, redirect
-from app.forms import TitleForm, LoginForm, RegisterForm
+from app.forms import TitleForm, LoginForm, RegisterForm, ContactForm
+from app.parser import parse
 
 @app.route('/')
 @app.route('/index')
@@ -52,6 +53,13 @@ def title():
 
     if form.validate_on_submit():
         header = form.title.data
+
+        # call parser
+        found = parse(header)
+
+        if found:
+            print("That is a name")
+
         return redirect(url_for('index', header=header))
 
     return render_template('form.html', title='Change Title', form=form)
@@ -75,3 +83,13 @@ def register():
         return redirect(url_for('login'))
 
     return render_template('form.html', title="Register", form=form)
+
+@app.route('/contact', methods=['GET', 'POST'])
+def contact():
+    form = ContactForm()
+
+    if form.validate_on_submit():
+        print(f'Name: {form.name.data} \t Email: {form.email.data} \t Message: {form.message.data}')
+        return redirect(url_for('index'))
+
+    return render_template('form.html', title="Contact", form=form)

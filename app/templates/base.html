@@ -54,6 +54,14 @@
               <a class="nav-link" href="{{ url_for('register') }}">Register</a>
             </li>
 
+          {% if title == 'Contact' %}
+            <li class="nav-item active">
+          {% else %}
+            <li class="nav-item">
+          {% endif %}
+              <a class="nav-link" href="{{ url_for('contact') }}">Contact</a>
+            </li>
+
       </ul>
     </div>
   </nav>
