@@ -42,6 +42,12 @@ body {
   width: 80%;
 }
 
+.error {
+  color: red;
+  font-weight: bold;
+  font-size: 85%;
+}
+
 footer {
   background-color: #343a40!important;
 }

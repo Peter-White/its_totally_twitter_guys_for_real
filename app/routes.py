@@ -1,11 +1,11 @@
-from app import app
-from flask import render_template, url_for, redirect
+from app import app, db
+from flask import render_template, url_for, redirect, flash
 from app.forms import TitleForm, LoginForm, RegisterForm, ContactForm
 from app.parser import parse
+from app.models import Title
 
 @app.route('/')
 @app.route('/index')
-@app.route('/index/<header>', methods=['GET'])
 def index(header=''):
     products = [
         {
@@ -45,6 +45,8 @@ def index(header=''):
         },
     ]
 
+    header = Title.query.get(1).title
+
     return render_template('index.html', title="Home", products=products, header=header)
 
 @app.route('/title', methods=['GET', 'POST'])
@@ -54,13 +56,15 @@ def title():
     if form.validate_on_submit():
         header = form.title.data
 
-        # call parser
-        found = parse(header)
+        data = Title.query.get(1)
+        data.title = header
 
-        if found:
-            print("That is a name")
+        # add to session and commit
+        db.session.add(data)
+        db.session.commit()
 
-        return redirect(url_for('index', header=header))
+        flash(f'You have changed the title to {header}')
+        return redirect(url_for('index'))
 
     return render_template('form.html', title='Change Title', form=form)
 
@@ -69,7 +73,7 @@ def login():
     form = LoginForm()
 
     if form.validate_on_submit():
-        print(f'E-Mail: {form.email.data} \t Password: {form.password.data}')
+        flash(f'E-Mail: {form.email.data} \t Password: {form.password.data}')
         return redirect(url_for('index'))
 
     return render_template('form.html', title="Login", form=form)
@@ -79,7 +83,7 @@ def register():
     form = RegisterForm()
 
     if form.validate_on_submit():
-        print(f'First Name: {form.first_name.data} \t Last Name: {form.last_name.data} \t Username: {form.username.data} \t E-Mail: {form.email.data} \t Age: {form.age.data} \t Bio: {form.bio.data} \t Profile Pic URL: {form.url.data} \t Password: {form.password.data} \t Confirm Password: {form.password2.data}')
+        flash(f'Thanks for registering, an email confirmation has been sent to {form.email.data}.')
         return redirect(url_for('login'))
 
     return render_template('form.html', title="Register", form=form)
@@ -89,7 +93,7 @@ def contact():
     form = ContactForm()
 
     if form.validate_on_submit():
-        print(f'Name: {form.name.data} \t Email: {form.email.data} \t Message: {form.message.data}')
+        flash(f'Thanks for your submission, we will contact you shortly. A copy has been sent to {form.email.data}.')
         return redirect(url_for('index'))
 
-    return render_template('form.html', title="Contact", form=form)
+    return render_template('form.html', form=form, title="Contact Us")
