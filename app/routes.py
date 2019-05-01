@@ -1,8 +1,7 @@
 from app import app, db
 from flask import render_template, url_for, redirect, flash
 from app.forms import TitleForm, LoginForm, RegisterForm, ContactForm
-from app.parser import parse
-from app.models import Title
+from app.models import Title, Contact
 
 @app.route('/')
 @app.route('/index')
@@ -93,7 +92,20 @@ def contact():
     form = ContactForm()
 
     if form.validate_on_submit():
-        flash(f'Thanks for your submission, we will contact you shortly. A copy has been sent to {form.email.data}.')
-        return redirect(url_for('index'))
+        try:
+            contact = Contact(
+                name = form.name.data,
+                email = form.email.data,
+                message = form.message.data
+            )
+
+            db.session.add(contact)
+            db.session.commit()
+
+            flash(f'Thanks for your submission, we will contact you shortly. A copy has been sent to {form.email.data}.')
+            return redirect(url_for('index'))
+        except:
+            flash("Sorry your submission did not go through. Try again.")
+            return redirect(url_for('contact'))
 
     return render_template('form.html', form=form, title="Contact Us")
