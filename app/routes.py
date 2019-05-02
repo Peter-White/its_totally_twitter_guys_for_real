@@ -1,7 +1,7 @@
 from app import app, db
 from flask import render_template, url_for, redirect, flash
-from app.forms import TitleForm, LoginForm, RegisterForm, ContactForm
-from app.models import Title, Contact
+from app.forms import TitleForm, LoginForm, RegisterForm, ContactForm, PostForm
+from app.models import Title, Contact, Post
 
 @app.route('/')
 @app.route('/index')
@@ -52,6 +52,7 @@ def index(header=''):
 def title():
     form = TitleForm()
 
+    print(form.title.data)
     if form.validate_on_submit():
         header = form.title.data
 
@@ -109,3 +110,23 @@ def contact():
             return redirect(url_for('contact'))
 
     return render_template('form.html', form=form, title="Contact Us")
+
+@app.route('/profile', methods=['GET', 'POST'])
+def profile():
+    form = PostForm()
+
+    posts = Post.query.all()
+
+    if form.validate_on_submit():
+        try:
+            tweet = Post(tweet=form.tweet.data)
+
+            db.session.add(tweet)
+            db.session.commit()
+
+            return redirect(url_for('profile'))
+        except:
+            flash("Broked")
+            return redirect(url_for('profile'))
+
+    return render_template('profile.html', title='Profile', form=form, posts=posts)
