@@ -175,6 +175,8 @@ def profile(username=""):
 @app.route('/checkout')
 def checkout():
 
+    products = []
+
     products = [
                 {
                     'id': 1001,

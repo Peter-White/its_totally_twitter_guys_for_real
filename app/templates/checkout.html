@@ -14,26 +14,30 @@
         </div> <!-- ends row -->
     </header>
     <main>
-      <table class="table">
-        <thead>
-          <tr>
-            <th scope="col">#</th>
-            <th scope="col">Name</th>
-            <th scope="col">$</th>
-            <th scope="col">Rem.</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for product in products %}
+      {% if not products %}
+        <h3>No items in cart</h3>
+      {% else %}
+        <table class="table">
+          <thead>
             <tr>
-              <td>1</td>
-              <td>Mark</td>
-              <td>Otto</td>
+              <th scope="col">#</th>
+              <th scope="col">Name</th>
+              <th scope="col">$</th>
+              <th scope="col">Rem.</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for product in products %}
+            <tr>
+              <td>{{ loop.index }}</td>
+              <td>{{ product.title }}</td>
+              <td>{{ product.price }}</td>
               <td><button type="button" class="btn btn-danger">X</button></td>
             </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% endif %}
     </main>
   </div> <!-- ends container -->
 {% endblock %}
