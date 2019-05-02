@@ -19,16 +19,19 @@
         <div class="col-md-8">
           <div class="card">
             <!-- TODO: add form -->
+            {{ wtf.quick_form(form) }}
           </div> <!-- ends card for form -->
 
             <!-- TODO: loop over this card for tweets -->
-            <div class="card">
-              <img src="http://placehold.it/50x50" alt="Profile Pic" class="pic">
-              <div class="date">May 2nd, 2019</div>
-              <div class="tweet">
-                <p>This is a sample tweet, change this.</p>
-              </div>
-            </div> <!-- ends tweet card -->
+            {% for post in posts[::-1] %}
+              <div class="card">
+                <img src="http://placehold.it/50x50" alt="Profile Pic" class="pic">
+                <div class="date">{{ post.date_posted }}</div>
+                <div class="tweet">
+                  <p>{{ post.tweet }}</p>
+                </div>
+              </div> <!-- ends tweet card -->
+            {% endfor %}
 
         </div> <!-- ends col 8 -->
       </div>
