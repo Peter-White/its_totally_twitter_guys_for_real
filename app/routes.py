@@ -52,6 +52,7 @@ def index(header=''):
 def title():
     form = TitleForm()
 
+    print(form.title.data)
     if form.validate_on_submit():
         header = form.title.data
 
@@ -109,3 +110,7 @@ def contact():
             return redirect(url_for('contact'))
 
     return render_template('form.html', form=form, title="Contact Us")
+
+@app.route('/profile', methods=['GET', 'POST'])
+def profile():
+    return render_template('profile.html', title='Profile')
