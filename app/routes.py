@@ -64,7 +64,7 @@ def title():
         db.session.add(data)
         db.session.commit()
 
-        flash(f'You have changed the title to {header}')
+        # flash(f'You have changed the title to {header}')
         return redirect(url_for('index'))
 
     return render_template('form.html', title='Change Title', form=form)
@@ -75,7 +75,7 @@ def login():
 
     # if user is already logged in , send them to the profile page
     if current_user.is_authenticated:
-        flash("You are already logged in!")
+        # flash("You are already logged in!")
         return redirect(url_for('profile', username=current_user.username))
 
     if form.validate_on_submit():
@@ -85,12 +85,12 @@ def login():
         # if user doesn't exist, reload the page and flash message
         # or if the password dosen't match the password stored
         if user is None or not user.check_password(form.password.data):
-            flash('Credentials are incorrect.')
+            # flash('Credentials are incorrect.')
             return redirect(url_for('index'))
 
         # if user does exist, and credentials are correct, log then in and send them to their profile page
         login_user(user, remember = form.remember_me.data)
-        flash("You are now logged in!")
+        # flash("You are now logged in!")
         return redirect(url_for('profile', username=user.username))
 
     return render_template('form.html', title="Login", form=form)
@@ -101,7 +101,7 @@ def register():
 
     # check to see if the user is already logged in, if so send to index
     if current_user.is_authenticated:
-        flask('You are already registered')
+        # flask('You are already registered')
         return redirect(url_for('index'))
 
     if form.validate_on_submit():
@@ -121,7 +121,7 @@ def register():
         db.session.add(user)
         db.session.commit()
 
-        flash(f'Thanks for registering, an email confirmation has been sent to {form.email.data}.')
+        # flash(f'Thanks for registering, an email confirmation has been sent to {form.email.data}.')
         return redirect(url_for('login'))
 
     return render_template('form.html', title="Register", form=form)
@@ -141,10 +141,10 @@ def contact():
             db.session.add(contact)
             db.session.commit()
 
-            flash(f'Thanks for your submission, we will contact you shortly. A copy has been sent to {form.email.data}.')
+            # flash(f'Thanks for your submission, we will contact you shortly. A copy has been sent to {form.email.data}.')
             return redirect(url_for('index'))
         except:
-            flash("Sorry your submission did not go through. Try again.")
+            # flash("Sorry your submission did not go through. Try again.")
             return redirect(url_for('contact'))
 
     return render_template('form.html', form=form, title="Contact Us")
@@ -154,6 +154,7 @@ def contact():
 def profile(username=""):
     form = PostForm()
 
+    print(current_user.username, username)
     # posts = Post.query.all()
 
     user = User.query.filter_by(username=username).first()
@@ -167,7 +168,7 @@ def profile(username=""):
 
             return redirect(url_for('profile', username=username))
         except:
-            flash("Broked")
+            # flash("Broked")
             return redirect(url_for('profile'))
 
     return render_template('profile.html', title='Profile', form=form, user=user)
@@ -219,5 +220,5 @@ def checkout():
 @app.route('/logout')
 def logout():
     logout_user()
-    flash("You have been logged out!")
+    # flash("You have been logged out!")
     return redirect(url_for('login'))
