@@ -1,8 +1,9 @@
 from app import app, db, login
-from flask import render_template, url_for, redirect, flash
+from flask import render_template, url_for, redirect, flash, request, jsonify
 from app.forms import TitleForm, LoginForm, RegisterForm, ContactForm, PostForm
 from app.models import Title, Contact, Post, User
 from flask_login import current_user, login_user, logout_user, login_required
+import requests
 
 @app.route('/')
 @app.route('/index')
@@ -222,3 +223,53 @@ def logout():
     logout_user()
     # flash("You have been logged out!")
     return redirect(url_for('login'))
+
+@app.route('/api/user/posts')
+def apiUserPosts():
+    username = request.args.get("username")
+
+    # optional param
+    date = request.args.get("date")
+
+    try:
+        posts = []
+        user_id = User.query.filter_by(id = 1).first().id
+        if user_id:
+            userPosts = Post.query.filter_by(user_id = user_id).all()
+            for post in userPosts:
+                if not date or post.date_posted == date:
+                    posts.append({ "tweet" : post.tweet, "date_posted" : post.date_posted })
+
+            return jsonify(posts)
+
+        return jsonify('User Not Found')
+
+    except:
+        return jsonify('Fail')
+
+@app.route('/api/user/messages')
+def apiUserMessages():
+    email = request.args.get("email")
+
+    try:
+        messages = []
+        userMessages = Contact.query.filter_by(email = email).all()
+
+        for message in userMessages:
+            query = { "name" : message.name }
+            query["email"] = message.email
+            query["message"] = message.message
+
+            user_id = User.query.filter_by(email = email).first().id
+
+            if user_id:
+                query["registered"] = True
+            else:
+                query["registered"] = False
+
+            messages.append(query)
+
+        return jsonify(messages)
+
+    except:
+        return jsonify('Fail')
